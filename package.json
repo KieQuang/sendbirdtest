@@ -1,0 +1,90 @@
+{
+  "repository": "git@github.com:sendbird/sendbird-uikit-react-native.git",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "packages/*",
+      "sample",
+      "docs-validation"
+    ],
+    "nohoist": [
+      "**/react",
+      "**/react-dom",
+      "**/react-native",
+      "**/react-native/**",
+      "**/react-native-dev-menu",
+      "**/react-native-codegen",
+      "**/@react-native-firebase/**"
+    ]
+  },
+  "scripts": {
+    "postinstall": "patch-package",
+    "prepare": "lerna run --stream --sort prepare",
+    "prepublishOnly": "yarn build",
+    "reset": "find . -type dir -name node_modules | xargs rm -rf",
+    "clean": "lerna run clean",
+    "build": "lerna run build",
+    "docs": "yarn build && typedoc --out docs --entryPointStrategy packages 'packages/*' && yarn clean",
+    "test": "jest --verbose",
+    "test:build": "yarn build --stream && yarn clean --stream",
+    "lint": "yarn lint:eslint && yarn lint:prettier",
+    "fix": "yarn fix:eslint && yarn fix:prettier",
+    "lint:eslint": "eslint packages/*/src --ext ts,tsx -c ./.eslintrc.js",
+    "lint:prettier": "prettier --check \"sample/src/**/*.{ts,tsx}\" \"packages/*/src/**/*.{ts,tsx}\"",
+    "fix:eslint": "eslint --fix packages/*/src --ext ts,tsx -c ./.eslintrc.js",
+    "fix:prettier": "prettier --write \"sample/src/**/*.{ts,tsx}\" \"packages/*/src/**/*.{ts,tsx}\"",
+    "sample:pod-install": "cd sample/ios && pod install",
+    "sample:ios": "cd sample && yarn ios",
+    "sample:android": "cd sample && yarn android",
+    "deploy:ios": "cd sample/ios && bundle exec fastlane deploy",
+    "deploy:android": "cd sample/android && bundle exec fastlane deploy",
+    "bump:major": "lerna version major --no-git-tag-version",
+    "bump:minor": "lerna version minor --no-git-tag-version",
+    "bump:patch": "lerna version patch --no-git-tag-version",
+    "deploy:npm": "lerna publish from-git"
+  },
+  "devDependencies": {
+    "@testing-library/react-native": "^9.0.0",
+    "@trivago/prettier-plugin-sort-imports": "^3.1.1",
+    "@types/jest": "^27.4.0",
+    "@typescript-eslint/eslint-plugin": "^5.9.1",
+    "@typescript-eslint/parser": "^5.9.1",
+    "babel-jest": "^27.4.6",
+    "chalk": "^4",
+    "conventional-changelog-conventionalcommits": "^5.0.0",
+    "del-cli": "^4.0.1",
+    "eslint": "^8.6.0",
+    "eslint-config-prettier": "^8.5.0",
+    "jest": "^27.4.7",
+    "lerna": "^5.1.6",
+    "patch-package": "^6.4.7",
+    "postinstall-postinstall": "^2.1.0",
+    "prettier": "^2.5.1",
+    "react": "17.0.2",
+    "react-native": "0.67.4",
+    "react-native-builder-bob": "^0.18.2",
+    "react-native-fast-image": "^8.5.11",
+    "react-native-safe-area-context": "^3.3.2",
+    "react-test-renderer": "^17.0.2",
+    "typedoc": "^0.23.7",
+    "typescript": "^4.5.4"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/"
+    ],
+    "testRegex": "/__tests__/.*\\.(test|spec)\\.(js|tsx?)$",
+    "moduleNameMapper": {
+      "@sendbird/([^/]+)": "<rootDir>/packages/$1/src"
+    },
+    "preset": "react-native"
+  }
+}
